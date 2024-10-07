@@ -194,7 +194,7 @@ mod unicode;
 mod unicode_tables;
 pub mod utf8;
 
-/// Escapes all regular expression meta characters in `text`.
+/// Экранирует все метасимволы регулярных выражений в `text`.
 ///
 /// The string returned may be safely used as a literal in a regular
 /// expression.

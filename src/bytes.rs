@@ -1,5 +1,5 @@
 /*!
-Search for regex matches in `&[u8]` haystacks.
+Поиск совпадений регулярных выражений в`&[u8]` стогах сена.
 
 This module provides a nearly identical API via [`Regex`] to the one found in
 the top-level of this crate. There are two important differences:

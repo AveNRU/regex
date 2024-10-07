@@ -4,7 +4,7 @@ use regex_automata::{meta, Input, PatternID, PatternSet, PatternSetIter};
 
 use crate::{Error, RegexSetBuilder};
 
-/// Match multiple, possibly overlapping, regexes in a single search.
+/// Сопоставьте несколько, возможно, перекрывающихся, регулярных выражений в одном поиске.
 ///
 /// A regex set corresponds to the union of zero or more regular expressions.
 /// That is, a regex set will match a haystack when at least one of its
@@ -452,7 +452,7 @@ impl Default for RegexSet {
     }
 }
 
-/// A set of matches returned by a regex set.
+/// Набор совпадений, возвращаемых набором регулярных выражений.
 ///
 /// Values of this type are constructed by [`RegexSet::matches`].
 #[derive(Clone, Debug)]
@@ -621,7 +621,7 @@ impl<'a> IntoIterator for &'a SetMatches {
     }
 }
 
-/// An owned iterator over the set of matches from a regex set.
+/// Собственный повторитель по набору совпадений из набора регулярных выражений.
 ///
 /// This will always produces matches in ascending order of index, where the
 /// index corresponds to the index of the regex that matched with respect to
@@ -684,7 +684,7 @@ impl DoubleEndedIterator for SetMatchesIntoIter {
 
 impl core::iter::FusedIterator for SetMatchesIntoIter {}
 
-/// A borrowed iterator over the set of matches from a regex set.
+/// Заимствованный повторитель по набору совпадений из набора регулярных выражений.
 ///
 /// The lifetime `'a` refers to the lifetime of the [`SetMatches`] value that
 /// created this iterator.

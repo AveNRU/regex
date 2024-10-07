@@ -4,7 +4,7 @@ use crate::{error::Error, utf8};
 
 mod parse;
 
-/// Escapes all regular expression meta characters in `pattern`.
+/// Экранирует все метасимволы регулярных выражений в `pattern`.
 ///
 /// The string returned may be safely used as a literal in a regular
 /// expression.

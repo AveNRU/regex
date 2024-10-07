@@ -118,8 +118,8 @@ $ cargo run
 The name is: Murphy
 ```
 
-The first time you run the program will show more output like above. But
-subsequent runs shouldn't have to re-compile the dependencies.
+При первом запуске программы будет показан более подробный вывод, как указано выше. 
+Но при последующих запусках не придется перекомпилировать зависимости.
 
 # Examples
 

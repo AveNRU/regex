@@ -13,7 +13,7 @@ use crate::{
     pool::CachePool,
 };
 
-/// A compiled regular expression for searching Unicode haystacks.
+/// Собранное Регулярное выражение для поиска в стогах сена Unicode.
 ///
 /// A `Regex` can be used to search haystacks, split haystacks into substrings
 /// or replace substrings in a haystack with a different substring. All
@@ -1440,7 +1440,7 @@ impl Regex {
     }
 }
 
-/// Represents a single match of a regex in a haystack.
+/// Представляет одно совпадение регулярного выражения в стоге сенаack.
 ///
 /// A `Match` contains both the start and end byte offsets of the match and the
 /// actual substring corresponding to the range of those byte offsets. It is
@@ -1594,7 +1594,7 @@ impl<'h> From<Match<'h>> for core::ops::Range<usize> {
     }
 }
 
-/// Represents the capture groups for a single match.
+/// Представляет группы захвата для одного матча.
 ///
 /// Capture groups refer to parts of a regex enclosed in parentheses. They can
 /// be optionally named. The purpose of capture groups is to be able to
@@ -2043,7 +2043,7 @@ impl<'h, 'n> core::ops::Index<&'n str> for Captures<'h> {
     }
 }
 
-/// A low level representation of the byte offsets of each capture group.
+/// Низкоуровневое представление смещений байтов каждой группы захвата.
 ///
 /// You can think of this as a lower level [`Captures`], where this type does
 /// not support named capturing groups directly and it does not borrow the
@@ -2149,7 +2149,7 @@ impl CaptureLocations {
     }
 }
 
-/// An iterator over all non-overlapping matches in a haystack.
+/// Повторитель по всем непересекающимся совпадениям в стоге се.
 ///
 /// This iterator yields [`Match`] values. The iterator stops when no more
 /// matches can be found.
@@ -2186,7 +2186,7 @@ impl<'r, 'h> Iterator for Matches<'r, 'h> {
 
 impl<'r, 'h> core::iter::FusedIterator for Matches<'r, 'h> {}
 
-/// An iterator over all non-overlapping capture matches in a haystack.
+/// Повторитель по всем неперекрывающимся совпадениям захвата в стоге сена.
 ///
 /// This iterator yields [`Captures`] values. The iterator stops when no more
 /// matches can be found.
@@ -2228,7 +2228,7 @@ impl<'r, 'h> Iterator for CaptureMatches<'r, 'h> {
 
 impl<'r, 'h> core::iter::FusedIterator for CaptureMatches<'r, 'h> {}
 
-/// An iterator over all substrings delimited by a regex match.
+/// Повторитель по всем подстрокам, разделенным регулярным выражением.
 ///
 /// `'r` is the lifetime of the compiled regular expression and `'h` is the
 /// lifetime of the byte string being split.
@@ -2274,7 +2274,7 @@ impl<'r, 'h> Iterator for Split<'r, 'h> {
 
 impl<'r, 't> core::iter::FusedIterator for Split<'r, 't> {}
 
-/// An iterator over at most `N` substrings delimited by a regex match.
+/// Повторитель по максимум`N` подстрокам, разделенным соответствием регулярному выражению.
 ///
 /// The last substring yielded by this iterator will be whatever remains after
 /// `N-1` splits.
@@ -2330,7 +2330,7 @@ impl<'r, 'h> Iterator for SplitN<'r, 'h> {
 
 impl<'r, 't> core::iter::FusedIterator for SplitN<'r, 't> {}
 
-/// An iterator over the names of all capture groups in a regex.
+/// Повторитель по именам всех групп захвата в регулярном выражении.
 ///
 /// This iterator yields values of type `Option<&str>` in order of the opening
 /// capture group parenthesis in the regex pattern. `None` is yielded for
@@ -2366,7 +2366,7 @@ impl<'r> ExactSizeIterator for CaptureNames<'r> {}
 
 impl<'r> core::iter::FusedIterator for CaptureNames<'r> {}
 
-/// An iterator over all group matches in a [`Captures`] value.
+/// Повторитель по всем совпадениям группы в [`Captures`] значении.
 ///
 /// This iterator yields values of type `Option<Match<'h>>`, where `'h` is the
 /// lifetime of the haystack that the matches are for. The order of elements
@@ -2412,7 +2412,7 @@ impl<'c, 'h> ExactSizeIterator for SubCaptureMatches<'c, 'h> {}
 
 impl<'c, 'h> core::iter::FusedIterator for SubCaptureMatches<'c, 'h> {}
 
-/// A trait for types that can be used to replace matches in a haystack.
+/// Признак для видов, которые можно использовать для замены спичек в стоге сена.
 ///
 /// In general, users of this crate shouldn't need to implement this trait,
 /// since implementations are already provided for `&str` along with other
@@ -2552,7 +2552,7 @@ where
     }
 }
 
-/// A by-reference adaptor for a [`Replacer`].
+/// Адаптер по ссылке для [`Replacer`].
 ///
 /// This permits reusing the same `Replacer` value in multiple calls to a
 /// replacement routine like [`Regex::replace_all`].
@@ -2571,7 +2571,7 @@ impl<'a, R: Replacer + ?Sized + 'a> Replacer for ReplacerRef<'a, R> {
     }
 }
 
-/// A helper type for forcing literal string replacement.
+/// Вспомогательный вид для принудительной замены знаковой строки.
 ///
 /// It can be used with routines like [`Regex::replace`] and
 /// [`Regex::replace_all`] to do a literal string replacement without expanding
@@ -2619,7 +2619,7 @@ fn no_expansion<T: AsRef<str>>(t: &T) -> Option<Cow<'_, str>> {
     }
 }
 
-/// A configurable builder for a [`Regex`].
+/// Настраиваемый конструктор для [`Regex`].
 ///
 /// This builder can be used to programmatically set flags such as `i` (case
 /// insensitive) and `x` (for verbose mode). This builder can also be used to

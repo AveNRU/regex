@@ -1,4 +1,4 @@
-/// An error that occurred during parsing or compiling a regular expression.
+/// Ошибка, возникшая при анализе или сборке регулярного выражения.
 ///
 /// A parse error occurs when the syntax of the regex pattern is not
 /// valid. Otherwise, a regex can still fail to build if it would
