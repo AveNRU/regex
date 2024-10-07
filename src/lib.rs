@@ -1,17 +1,15 @@
 /*!
-This crate provides routines for searching strings for matches of a [regular
-expression] (aka "regex"). The regex syntax supported by this crate is similar
-to other regex engines, but it lacks several features that are not known how to
-implement efficiently. This includes, but is not limited to, look-around and
-backreferences. In exchange, all regex searches in this crate have worst case
-`O(m * n)` time complexity, where `m` is proportional to the size of the regex
-and `n` is proportional to the size of the string being searched.
+TЭтот контейнер предоставляет процедуры для поиска строк для совпадений с регулярным выражением (т. н. «regex»). 
+Синтаксис регулярных выражений, поддерживаемый этим контейнером, похож на синтаксис других движков регулярных выражений, 
+но в нем отсутствуют несколько функций, которые неизвестно, как эффективно реализовать. Это включает в себя, помимо прочего, 
+просмотр и обратные ссылки. Взамен все поиски регулярных выражений в этом контейнере имеют наихудшую
+`O(m * n)` временную сложность, где `m` пропорциональна размеру регулярного выражения и `n` 
+пропорциональна размеру искомой строки.
 
 [regular expression]: https://en.wikipedia.org/wiki/Regular_expression
 
-If you just want API documentation, then skip to the [`Regex`] type. Otherwise,
-here's a quick example showing one way of parsing the output of a grep-like
-program:
+IЕсли вам нужна только документация API, то переходите к  [`Regex`] виду. В противном случае, вот краткий пример, 
+показывающий один из способов разбора вывода программы, похожей на grep:
 
 ```rust
 use regex::Regex;
@@ -35,52 +33,44 @@ assert_eq!(results, vec![
 # Ok::<(), Box<dyn std::error::Error>>(())
 ```
 
-# Overview
+# Обзор
 
-The primary type in this crate is a [`Regex`]. Its most important methods are
+Основной тип в этом ящике — a [`Regex`]. Его наиболее важные методы следующие:
 as follows:
 
-* [`Regex::new`] compiles a regex using the default configuration. A
-[`RegexBuilder`] permits setting a non-default configuration. (For example,
-case insensitive matching, verbose mode and others.)
-* [`Regex::is_match`] reports whether a match exists in a particular haystack.
-* [`Regex::find`] reports the byte offsets of a match in a haystack, if one
-exists. [`Regex::find_iter`] returns an iterator over all such matches.
-* [`Regex::captures`] returns a [`Captures`], which reports both the byte
-offsets of a match in a haystack and the byte offsets of each matching capture
-group from the regex in the haystack.
-[`Regex::captures_iter`] returns an iterator over all such matches.
+* [`Regex::new`] компилирует регулярное выражение, используя конфигурацию по умолчанию. A
+[`RegexBuilder`] позволяет задать конфигурацию, отличную от конфигурации по умолчанию. (Например, соответствие без учета регистра, подробный режим и другие.)
+* [`Regex::is_match`] сообщает, есть ли совпадение в конкретном стоге сена.
+* [`Regex::find`] сообщает смещения байтов совпадения в стоге сена, если таковое существует.
+exists. [`Regex::find_iter`] возвращает итератор по всем таким совпадениям.
+* [`Regex::captures`] возвращает [`Captures`],  который сообщает как смещения байтов совпадения в стоге сена, 
+так и смещения байтов каждой совпадающей группы захвата из регулярного выражения в стоге сена.
+[`Regex::captures_iter`] возвращает итератор по всем таким совпадениям.
 
-There is also a [`RegexSet`], which permits searching for multiple regex
-patterns simultaneously in a single search. However, it currently only reports
-which patterns match and *not* the byte offsets of a match.
+Также есть [`RegexSet`], который позволяет искать несколько шаблонов регулярных выражений одновременно в одном поиске. 
+Однако в настоящее время он сообщает только о совпадающих шаблонах, а не о смещениях байтов совпадения.
 
-Otherwise, this top-level crate documentation is organized as follows:
+В противном случае эта документация по ящику верхнего уровня организована следующим образом:
 
-* [Usage](#usage) shows how to add the `regex` crate to your Rust project.
-* [Examples](#examples) provides a limited selection of regex search examples.
-* [Performance](#performance) provides a brief summary of how to optimize regex
-searching speed.
-* [Unicode](#unicode) discusses support for non-ASCII patterns.
-* [Syntax](#syntax) enumerates the specific regex syntax supported by this
-crate.
-* [Untrusted input](#untrusted-input) discusses how this crate deals with regex
-patterns or haystacks that are untrusted.
-* [Crate features](#crate-features) documents the Cargo features that can be
-enabled or disabled for this crate.
-* [Other crates](#other-crates) links to other crates in the `regex` family.
+* [Использование](#usage)  показывает, как добавит `regex` ящик в ваш проект Rust.
+* [Примеры](#examples) содержат ограниченный выбор примеров поиска с использованием регулярных выражений.
+* [В разделе «Производительность»](#performance) дается краткий обзор того, как оптимизировать скорость поиска с помощью регулярных выражений.
+* [Unicode](#unicode)обсуждает поддержку не-ASCII-шаблонов.
+* [Правила написания](#syntax) перечисляет конкретный синтаксис регулярных выражений, поддерживаемый этим контейнером.
+* [В разделе «Ненадежные входные данные»](#untrusted-input) обсуждается, как этот ящик справляется с шаблонами регулярных выражений или стогами сена, которые не являются надежными.
+* [В разделе «Функции ящика»](#crate-features) описываются функции груза, которые можно включить или отключить для этого ящика.
+* [Другие ящики](#other-crates) связаны с другими ящиками в `regex` семействе.
 
 # Usage
 
-The `regex` crate is [on crates.io](https://crates.io/crates/regex) and can be
-used by adding `regex` to your dependencies in your project's `Cargo.toml`.
-Or more simply, just run `cargo add regex`.
+Ящик `regex` находится на [on crates.io](https://crates.io/crates/regex)  и может быть использован путем добавления `regex` 
+к вашим зависимостям в вашем проекте `Cargo.toml`.
+Или, проще говоря, просто запустите `cargo add regex`.
 
-Here is a complete example that creates a new Rust project, adds a dependency
-on `regex`, creates the source code for a regex search and then runs the
-program.
+Вот полный пример, который создает новый проект Rust, добавляет зависимость от `regex`,  
+создает исходный код для поиска по регулярному выражению, а затем запускает программу.
 
-First, create the project in a new directory:
+Сначала создайте проект в новом каталоге:
 
 ```text
 $ mkdir regex-example
@@ -88,13 +78,13 @@ $ cd regex-example
 $ cargo init
 ```
 
-Second, add a dependency on `regex`:
+Во-вторых, добавьте зависимость от `regex``:
 
 ```text
 $ cargo add regex
 ```
 
-Third, edit `src/main.rs`. Delete what's there and replace it with this:
+В-третьих, отредактируйте `src/main.rs``. Удалите то, что там есть, и замените это на это:
 
 ```
 use regex::Regex;
@@ -109,7 +99,7 @@ fn main() {
 }
 ```
 
-Fourth, run it with `cargo run`:
+В-четвертых, запустите его с помощью `cargo run`:
 
 ```text
 $ cargo run
@@ -126,33 +116,29 @@ The name is: Murphy
 The first time you run the program will show more output like above. But
 subsequent runs shouldn't have to re-compile the dependencies.
 
-# Examples
+#Примеры 
 
-This section provides a few examples, in tutorial style, showing how to
-search a haystack with a regex. There are more examples throughout the API
-documentation.
+В этом разделе приведены несколько примеров в стиле руководства, показывающих, как искать в стоге сена с помощью регулярного выражения. В документации API есть еще примеры.
 
-Before starting though, it's worth defining a few terms:
+Однако прежде чем начать, стоит определить несколько терминов:
 
-* A **regex** is a Rust value whose type is `Regex`. We use `re` as a
-variable name for a regex.
-* A **pattern** is the string that is used to build a regex. We use `pat` as
-a variable name for a pattern.
-* A **haystack** is the string that is searched by a regex. We use `hay` as a
-variable name for a haystack.
+* **regex** is это значение Rust, тип которого `Regex`. Мы используем `re` 
+в качестве имени переменной для регулярного выражения.
+* A **Образец (pattern)** это строка, которая используется для построения регулярного выражения. Мы используем `pat` 
+в качестве имени переменной для шаблона.
+* A **Стог сена (haystack)** это строка, которую ищет регулярное выражение. Мы используем `hay` 
+в качестве имени переменной для haystack.
 
-Sometimes the words "regex" and "pattern" are used interchangeably.
+Иногда слова «регулярное выражение» и «шаблон» используются как взаимозаменяемые.
 
-General use of regular expressions in this crate proceeds by compiling a
-**pattern** into a **regex**, and then using that regex to search, split or
-replace parts of a **haystack**.
+Обычное использование регулярных выражений в этом контейнере осуществляется путем компиляции
+**образца (pattern)** в **regex**, а затем использования этого регулярного выражения для поиска, разделения 
+или замены частей ** стога сена (haystack)**.
 
-### Example: find a middle initial
+### Пример: найти начальную букву отчества
 
-We'll start off with a very simple example: a regex that looks for a specific
-name but uses a wildcard to match a middle initial. Our pattern serves as
-something like a template that will match a particular name with *any* middle
-initial.
+Начнем с очень простого примера: регулярное выражение, которое ищет определенное имя, но использует подстановочный знак для сопоставления 
+с инициалом среднего имени. Наш шаблон служит чем-то вроде шаблона, который будет сопоставлять определенное имя с любым инициалом среднего имени.
 
 ```rust
 use regex::Regex;
@@ -166,22 +152,22 @@ let Some(caps) = re.captures(hay) else { return };
 assert_eq!("J", &caps[1]);
 ```
 
-There are a few things worth noticing here in our first example:
+В нашем первом примере стоит обратить внимание на несколько моментов:
+* Это `.` специальный метасимвол шаблона, который означает «соответствует любому одиночному символу, за исключением новых строк». 
+(Точнее, в этом контейнере это означает «соответствует любой кодировке UTF-8 любого скалярного значения Unicode, отличного от \n.»)
+*Мы можем сопоставить фактическое `.` буквально, экранировав его, т. е `\.`.
+*Мы используем необработанные [строки Rust] , чтобы избежать необходимости иметь дело с escape-последовательностями как в синтаксисе шаблона 
+регулярных выражений, так и в синтаксисе строковых литералов Rust. Если бы мы не использовали здесь необработанные строки, нам пришлось бы использовать 
+`\\.` для сопоставления литерального `.`` символа. То есть `r"\."` и `"\\."` являются эквивалентными шаблонами.
+*Мы заключаем нашу подстановочную `.` инструкцию в скобки. Эти скобки имеют особое значение, которое говорит: «сделать любую часть стога сена, соответствующую этим скобкам, 
+доступной в качестве группы захвата». После нахождения соответствия мы получаем доступ к этой группе захвата с помощью `&caps[1]`.
 
-* The `.` is a special pattern meta character that means "match any single
-character except for new lines." (More precisely, in this crate, it means
-"match any UTF-8 encoding of any Unicode scalar value other than `\n`.")
-* We can match an actual `.` literally by escaping it, i.e., `\.`.
-* We use Rust's [raw strings] to avoid needing to deal with escape sequences in
-both the regex pattern syntax and in Rust's string literal syntax. If we didn't
-use raw strings here, we would have had to use `\\.` to match a literal `.`
-character. That is, `r"\."` and `"\\."` are equivalent patterns.
-* We put our wildcard `.` instruction in parentheses. These parentheses have a
-special meaning that says, "make whatever part of the haystack matches within
-these parentheses available as a capturing group." After finding a match, we
-access this capture group with `&caps[1]`.
 
-[raw strings]: https://doc.rust-lang.org/stable/reference/tokens.html#raw-string-literals
+[строки Rust]: https://doc.rust-lang.org/stable/reference/tokens.html#raw-string-literals
+
+В противном случае мы выполняем поиск с использованием `re.captures(hay)` и возвращаемся из нашей функции, если совпадений не обнаружено. 
+Затем мы ссылаемся на отчество, запрашивая часть стога сена, которая соответствует группе захвата, индексированной в `1`. 
+(Группа захвата с индексом 0 неявна и всегда соответствует всему совпадению. В данном случае это `Homer J. Simpson``.)
 
 Otherwise, we execute a search using `re.captures(hay)` and return from our
 function if no match occurred. We then reference the middle initial by asking
@@ -189,10 +175,9 @@ for the part of the haystack that matched the capture group indexed at `1`.
 (The capture group at index 0 is implicit and always corresponds to the entire
 match. In this case, that's `Homer J. Simpson`.)
 
-### Example: named capture groups
+### Пример: именованные группы захвата
 
-Continuing from our middle initial example above, we can tweak the pattern
-slightly to give a name to the group that matches the middle initial:
+Продолжая наш пример с инициалом отчества, приведенный выше, мы можем немного изменить шаблон, чтобы дать группе название, соответствующее инициалу отчества:
 
 ```rust
 use regex::Regex;
@@ -204,14 +189,11 @@ let Some(caps) = re.captures(hay) else { return };
 assert_eq!("J", &caps["middle"]);
 ```
 
-Giving a name to a group can be useful when there are multiple groups in
-a pattern. It makes the code referring to those groups a bit easier to
-understand.
+Присвоение имени группе может быть полезным, когда в шаблоне есть несколько групп. Это делает код, ссылающийся на эти группы, немного более понятным.
 
-### Example: validating a particular date format
+### Пример: проверка определенного формата даты
 
-This examples shows how to confirm whether a haystack, in its entirety, matches
-a particular date format:
+В этом примере показано, как проверить, соответствует ли стог сена в целом определенному формату даты:
 
 ```rust
 use regex::Regex;
@@ -220,13 +202,12 @@ let re = Regex::new(r"^\d{4}-\d{2}-\d{2}$").unwrap();
 assert!(re.is_match("2010-03-14"));
 ```
 
-Notice the use of the `^` and `$` anchors. In this crate, every regex search is
-run with an implicit `(?s:.)*?` at the beginning of its pattern, which allows
-the regex to match anywhere in a haystack. Anchors, as above, can be used to
-ensure that the full haystack matches a pattern.
+Обратите внимание на использование якорей ^и $. В этом ящике каждый поиск по регулярному выражению 
+выполняется с неявным (?s:.)*?в начале его шаблона, что позволяет регулярному выражению сопоставляться 
+с любым местом в стоге сена. Якоря, как и выше, можно использовать для обеспечения соответствия всего стога сена шаблону.
 
-This crate is also Unicode aware by default, which means that `\d` might match
-more than you might expect it to. For example:
+Этот контейнер также поддерживает Unicode по умолчанию, что означает, что он \dможет соответствовать большему 
+количеству символов, чем вы могли бы ожидать. Например:
 
 ```rust
 use regex::Regex;
@@ -235,20 +216,18 @@ let re = Regex::new(r"^\d{4}-\d{2}-\d{2}$").unwrap();
 assert!(re.is_match("𝟚𝟘𝟙𝟘-𝟘𝟛-𝟙𝟜"));
 ```
 
-To only match an ASCII decimal digit, all of the following are equivalent:
+Чтобы сопоставить только десятичную цифру ASCII, все следующие условия эквивалентны:
 
 * `[0-9]`
 * `(?-u:\d)`
 * `[[:digit:]]`
 * `[\d&&\p{ascii}]`
 
-### Example: finding dates in a haystack
+### Пример: поиск дат в стоге сена
 
-In the previous example, we showed how one might validate that a haystack,
-in its entirety, corresponded to a particular date format. But what if we wanted
-to extract all things that look like dates in a specific format from a haystack?
-To do this, we can use an iterator API to find all matches (notice that we've
-removed the anchors and switched to looking for ASCII-only digits):
+В предыдущем примере мы показали, как можно проверить, что стог сена в целом соответствует определенному 
+формату даты. Но что, если мы хотим извлечь из стога сена все, что выглядит как даты в определенном формате? Для этого 
+мы можем использовать API итератора, чтобы найти все совпадения (обратите внимание, что мы удалили якоря и переключились на поиск цифр, содержащих только ASCII):
 
 ```rust
 use regex::Regex;
@@ -265,8 +244,8 @@ assert_eq!(dates, vec![
 ]);
 ```
 
-We can also iterate over [`Captures`] values instead of [`Match`] values, and
-that in turn permits accessing each component of the date via capturing groups:
+Мы также можем перебирать  [`Captures`] значения вместо[`Match`] значений, и это, в свою очередь, 
+позволяет получить доступ к каждому компоненту даты через захватывающие группы:
 
 ```rust
 use regex::Regex;
@@ -295,10 +274,9 @@ assert_eq!(dates, vec![
 ]);
 ```
 
-### Example: simpler capture group extraction
+### Пример: более простое извлечение группы захвата
 
-One can use [`Captures::extract`] to make the code from the previous example a
-bit simpler in this case:
+В этом случае можно использовать [`Captures::extract`] код из предыдущего примера, чтобы немного упростить его:
 
 ```rust
 use regex::Regex;
@@ -317,19 +295,18 @@ assert_eq!(dates, vec![
 ]);
 ```
 
-`Captures::extract` works by ensuring that the number of matching groups match
-the number of groups requested via the `[year, month, day]` syntax. If they do,
-then the substrings for each corresponding capture group are automatically
-returned in an appropriately sized array. Rust's syntax for pattern matching
-arrays does the rest.
+`Captures::extract` работает, гарантируя, что количество соответствующих групп соответствует количеству групп, 
+запрошенных через `[year, month, day]` синтаксис. Если это так, то подстроки для каждой соответствующей группы 
+захвата автоматически возвращаются в массиве соответствующего размера. Синтаксис Rust для массивов сопоставления 
+с образцом делает все остальное.
 
-### Example: replacement with named capture groups
+### Пример: замена на именованные группы захвата
 
-Building on the previous example, perhaps we'd like to rearrange the date
-formats. This can be done by finding each match and replacing it with
-something different. The [`Regex::replace_all`] routine provides a convenient
-way to do this, including by supporting references to named groups in the
-replacement string:
+
+Основываясь на предыдущем примере, возможно, мы хотели бы переупорядочить форматы дат. 
+Это можно сделать, найдя каждое совпадение и заменив его чем-то другим. Процедура 
+[`Regex::replace_all`] предоставляет удобный способ сделать это, в том числе поддерживая 
+ссылки на именованные группы в строке замены:
 
 ```rust
 use regex::Regex;
@@ -339,18 +316,17 @@ let before = "1973-01-05, 1975-08-25 and 1980-10-18";
 let after = re.replace_all(before, "$m/$d/$y");
 assert_eq!(after, "01/05/1973, 08/25/1975 and 10/18/1980");
 ```
+Методы замены на самом деле полиморфны в замене, что обеспечивает большую гибкость, чем здесь. 
+([`Regex::replace`]  Более подробную информацию см. в документации.)
 
-The replace methods are actually polymorphic in the replacement, which
-provides more flexibility than is seen here. (See the documentation for
-[`Regex::replace`] for more details.)
 
-### Example: verbose mode
+### Пример: подробный режим
 
-When your regex gets complicated, you might consider using something other
-than regex. But if you stick with regex, you can use the `x` flag to enable
-insignificant whitespace mode or "verbose mode." In this mode, whitespace
-is treated as insignificant and one may write comments. This may make your
-patterns easier to comprehend.
+Когда ваше регулярное выражение становится сложным, вы можете рассмотреть возможность использования 
+чего-то другого, кроме регулярного выражения. Но если вы придерживаетесь регулярного выражения, 
+вы можете использовать `x` флаг для включения режима незначимых пробелов или «подробного режима». 
+В этом режиме пробелы считаются незначимыми, и можно писать комментарии. Это может сделать 
+ваши шаблоны более понятными.
 
 ```rust
 use regex::Regex;
@@ -367,16 +343,15 @@ let before = "1973-01-05, 1975-08-25 and 1980-10-18";
 let after = re.replace_all(before, "$m/$d/$y");
 assert_eq!(after, "01/05/1973, 08/25/1975 and 10/18/1980");
 ```
+Если вы хотите сопоставить пробелы в этом режиме, вы по-прежнему можете использовать 
+`\s,` `\n,` `\t` и т. д. Для экранирования одного символа пробела вы можете экранировать его 
+напрямую с помощью `\ ` , использовать его шестнадцатеричный код символа `\x20` или временно 
+отключить `x` флаг, например, `(?-x: )``.
 
-If you wish to match against whitespace in this mode, you can still use `\s`,
-`\n`, `\t`, etc. For escaping a single space character, you can escape it
-directly with `\ `, use its hex character code `\x20` or temporarily disable
-the `x` flag, e.g., `(?-x: )`.
 
-### Example: match multiple regular expressions simultaneously
+### Пример: одновременное сопоставление нескольких регулярных выражений
 
-This demonstrates how to use a [`RegexSet`] to match multiple (possibly
-overlapping) regexes in a single scan of a haystack:
+Это демонстрирует, как использовать [`RegexSet`] для сопоставления нескольких (возможно, перекрывающихся) регулярных выражений за одно сканирование стога сена:
 
 ```rust
 use regex::RegexSet;
@@ -402,50 +377,50 @@ assert!(!matches.matched(5));
 assert!(matches.matched(6));
 ```
 
-# Performance
+# Производительность
 
-This section briefly discusses a few concerns regarding the speed and resource
-usage of regexes.
+В этом разделе кратко обсуждаются некоторые проблемы, связанные со скоростью и использованием ресурсов регулярных выражений.
 
-### Only ask for what you need
+### Просите только то, что вам нужно
 
-When running a search with a regex, there are generally three different types
-of information one can ask for:
+При выполнении поиска с использованием регулярного выражения обычно можно запросить три различных типа информации:
 
-1. Does a regex match in a haystack?
-2. Where does a regex match in a haystack?
-3. Where do each of the capturing groups match in a haystack?
+1.Находит ли регулярное выражение соответствие стогу сена?
+2.Где в стоге сена находится соответствие регулярному выражению?
+3.Где в стоге сена размещаются все группы захвата?
+Вообще говоря, этот ящик мог бы предоставить функцию для ответа только на #3, которая автоматически включала бы #1 и #2. 
+Однако вычисление местоположения групповых совпадений захвата может быть значительно более затратным, поэтому лучше этого не делать, 
+если в этом нет необходимости.
 
-Generally speaking, this crate could provide a function to answer only #3,
-which would subsume #1 and #2 automatically. However, it can be significantly
-more expensive to compute the location of capturing group matches, so it's best
-not to do it if you don't need to.
+Поэтому спрашивайте только то, что вам нужно. Например, не используйте, [`Regex::find`] если вам нужно только проверить, соответствует ли 
+регулярное выражение стогу сена. [`Regex::is_match`] Вместо этого используйте .
 
-Therefore, only ask for what you need. For example, don't use [`Regex::find`]
-if you only need to test if a regex matches a haystack. Use [`Regex::is_match`]
-instead.
+### Unicode может влиять на использование памяти и скорость поиска
 
-### Unicode can impact memory usage and search speed
+Этот контейнер имеет первоклассную поддержку Unicode и **включен по умолчанию** . 
+Во многих случаях дополнительная память, необходимая для его поддержки, будет 
+незначительной и обычно не повлияет на скорость поиска. Но может в некоторых случаях.
 
-This crate has first class support for Unicode and it is **enabled by default**.
-In many cases, the extra memory required to support it will be negligible and
-it typically won't impact search speed. But it can in some cases.
-
-With respect to memory usage, the impact of Unicode principally manifests
-through the use of Unicode character classes. Unicode character classes
-tend to be quite large. For example, `\w` by default matches around 140,000
-distinct codepoints. This requires additional memory, and tends to slow down
-regex compilation. While a `\w` here and there is unlikely to be noticed,
-writing `\w{100}` will for example result in quite a large regex by default.
-Indeed, `\w` is considerably larger than its ASCII-only version, so if your
-requirements are satisfied by ASCII, it's probably a good idea to stick to
-ASCII classes. The ASCII-only version of `\w` can be spelled in a number of
-ways. All of the following are equivalent:
+Что касается использования памяти, влияние Unicode в основном проявляется через 
+использование классов символов Unicode. Классы символов Unicode, как правило, довольно 
+большие. Например, `\w` по умолчанию соответствует около 140 000 различных кодовых точек. 
+Это требует дополнительной памяти и, как правило, замедляет компиляцию регулярных выражений. 
+Хотя `\w` вряд ли будет замечено, запись, `\w{100}` например, приведет к довольно большому 
+регулярному выражению по умолчанию. Действительно, `\w` значительно больше, чем его версия 
+только для ASCII, поэтому, если ваши требования удовлетворяются ASCII, вероятно, будет 
+хорошей идеей придерживаться классов ASCII. Версия только для ASCII `\w` может быть написана 
+несколькими способами. Все следующие эквивалентны:
 
 * `[0-9A-Za-z_]`
 * `(?-u:\w)`
 * `[[:word:]]`
 * `[\w&&\p{ascii}]`
+
+Что касается скорости поиска, Unicode, как правило, обрабатывается довольно хорошо, даже при
+ использовании больших классов символов Unicode. Однако некоторые из более быстрых внутренних 
+ движков регулярных выражений не могут обрабатывать утверждение границы слова, поддерживающее Unicode. 
+ Поэтому, если вам не нужны утверждения границы слова, поддерживающие Unicode, вы можете рассмотреть 
+ возможность использования `(?-u:\b)` вместо `\b``, где первый использует определение символа слова только в формате ASCII.
 
 With respect to search speed, Unicode tends to be handled pretty well, even when
 using large Unicode character classes. However, some of the faster internal
@@ -454,31 +429,31 @@ don't need Unicode-aware word boundary assertions, you might consider using
 `(?-u:\b)` instead of `\b`, where the former uses an ASCII-only definition of
 a word character.
 
-### Literals might accelerate searches
+### Литералы могут ускорить поиск
 
-This crate tends to be quite good at recognizing literals in a regex pattern
-and using them to accelerate a search. If it is at all possible to include
-some kind of literal in your pattern, then it might make search substantially
-faster. For example, in the regex `\w+@\w+`, the engine will look for
-occurrences of `@` and then try a reverse match for `\w+` to find the start
-position.
+Этот ящик, как правило, довольно хорошо распознает литералы в шаблоне регулярных выражений 
+и использует их для ускорения поиска. Если вообще возможно включить какой-либо литерал в ваш 
+шаблон, то это может существенно ускорить поиск. Например, в регулярном выражении `\w+@\w+` движок 
+будет искать вхождения `@`, а затем попробует обратное соответствие для `\w+` нахождения начальной позиции.
 
-### Avoid re-compiling regexes, especially in a loop
+### Избегайте повторной компиляции регулярных выражений, особенно в цикле.
 
-It is an anti-pattern to compile the same pattern in a loop since regex
-compilation is typically expensive. (It takes anywhere from a few microseconds
-to a few **milliseconds** depending on the size of the pattern.) Not only is
-compilation itself expensive, but this also prevents optimizations that reuse
-allocations internally to the regex engine.
+Компиляция одного и того же шаблона в цикле является антишаблоном, 
+поскольку компиляция регулярных выражений обычно требует больших затрат. 
+(Это занимает от нескольких микросекунд до нескольких `миллисекунд` в зависимости от размера шаблона.) 
+Компиляция сама по себе требует больших затрат, но это также предотвращает оптимизации, которые повторно 
+используют выделения памяти внутри движка регулярных выражений.
 
-In Rust, it can sometimes be a pain to pass regexes around if they're used from
-inside a helper function. Instead, we recommend using crates like [`once_cell`]
-and [`lazy_static`] to ensure that patterns are compiled exactly once.
+В Rust иногда может быть проблематично передавать регулярные выражения, если они используются внутри вспомогательной функции. 
+Вместо этого мы рекомендуем использовать контейнеры вроде [`once_cell`] и , [`lazy_static`] чтобы гарантировать, 
+что шаблоны компилируются ровно один раз.
+
+В этом примере показано, как использовать once_cell:
 
 [`once_cell`]: https://crates.io/crates/once_cell
 [`lazy_static`]: https://crates.io/crates/lazy_static
 
-This example shows how to use `once_cell`:
+В этом примере показано, как использовать `once_cell`:
 
 ```rust
 use {
@@ -497,27 +472,6 @@ fn main() {
 }
 ```
 
-Specifically, in this example, the regex will be compiled when it is used for
-the first time. On subsequent uses, it will reuse the previously built `Regex`.
-Notice how one can define the `Regex` locally to a specific function.
-
-### Sharing a regex across threads can result in contention
-
-While a single `Regex` can be freely used from multiple threads simultaneously,
-there is a small synchronization cost that must be paid. Generally speaking,
-one shouldn't expect to observe this unless the principal task in each thread
-is searching with the regex *and* most searches are on short haystacks. In this
-case, internal contention on shared resources can spike and increase latency,
-which in turn may slow down each individual search.
-
-One can work around this by cloning each `Regex` before sending it to another
-thread. The cloned regexes will still share the same internal read-only portion
-of its compiled state (it's reference counted), but each thread will get
-optimized access to the mutable space that is used to run a search. In general,
-there is no additional cost in memory to doing this. The only cost is the added
-code complexity required to explicitly clone the regex. (If you share the same
-`Regex` across multiple threads, each thread still gets its own mutable space,
-but accessing that space is slower.)
 
 # Unicode
 
