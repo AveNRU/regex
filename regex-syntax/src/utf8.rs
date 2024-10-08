@@ -1,5 +1,5 @@
 /*!
-Converts ranges of Unicode scalar values to equivalent ranges of UTF-8 bytes.
+	Преобразует ряды скалярных значений Unicode в сопоставимые ряды байтов UTF-8.
 
 This is sub-module is useful for constructing byte based automatons that need
 to embed UTF-8 decoding. The most common use of this module is in conjunction

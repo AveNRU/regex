@@ -202,7 +202,7 @@ pub(crate) mod string {
 
     use super::Builder;
 
-    /// Настраиваемый конструктор для [`Regex`].
+    /// Настраиваемый строитель для [`Regex`].
     ///
     /// This builder can be used to programmatically set flags such as `i`
     /// (case insensitive) and `x` (for verbose mode). This builder can also be
@@ -777,7 +777,7 @@ pub(crate) mod string {
         }
     }
 
-    /// Настраиваемый конструктор для [`RegexSet`].
+    /// Настраиваемый строитель для [`RegexSet`].
     ///
     /// This builder can be used to programmatically set flags such as
     /// `i` (case insensitive) and `x` (for verbose mode). This builder
@@ -1362,7 +1362,7 @@ pub(crate) mod bytes {
 
     use super::Builder;
 
-    /// Настраиваемый конструктор для [`Regex`].
+    /// Настраиваемый строитель для [`Regex`].
     ///
     /// This builder can be used to programmatically set flags such as `i`
     /// (case insensitive) and `x` (for verbose mode). This builder can also be
@@ -1956,7 +1956,7 @@ pub(crate) mod bytes {
         }
     }
 
-    /// Настраиваемый конструктор для [`RegexSet`].
+    /// Настраиваемый строитель для [`RegexSet`].
     ///
     /// This builder can be used to programmatically set flags such as `i`
     /// (case insensitive) and `x` (for verbose mode). This builder can also be

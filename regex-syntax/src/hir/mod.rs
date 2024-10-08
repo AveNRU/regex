@@ -1,5 +1,5 @@
 /*!
-Defines a high-level intermediate (HIR) representation for regular expressions.
+Определяет высокоуровневое промежуточное (HIR) представление для регулярных выражений.
 
 The HIR is represented by the [`Hir`] type, and it principally constructed via
 [translation](translate) from an [`Ast`](crate::ast::Ast). Alternatively, users

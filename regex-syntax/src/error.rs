@@ -7,7 +7,7 @@ use alloc::{
 
 use crate::{ast, hir};
 
-/// This error type encompasses any error that can be returned by this crate.
+/// Этот вид ошибки охватывает любую ошибку, которую может вернуть это дополнение.
 ///
 /// This error type is marked as `non_exhaustive`. This means that adding a
 /// new variant is not considered a breaking change.

@@ -1,5 +1,5 @@
 /*!
-Defines an abstract syntax for regular expressions.
+Определяет абстрактные правила написания для регулярных выражений.
 */
 
 use core::cmp::Ordering;

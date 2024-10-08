@@ -116,7 +116,7 @@ fn is_capture_char(c: char, first: bool) -> bool {
     }
 }
 
-/// A builder for a regular expression parser.
+/// Строитель для обработчика регулярных выражений.
 ///
 /// This builder permits modifying configuration options for the parser.
 #[derive(Clone, Debug)]

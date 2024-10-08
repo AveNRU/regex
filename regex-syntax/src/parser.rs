@@ -1,6 +1,6 @@
 use crate::{ast, hir, Error};
 
-/// A convenience routine for parsing a regex using default options.
+/// Удобная процедура для разбора регулярного выражения с использованием параметров по умолчанию. 
 ///
 /// This is equivalent to `Parser::new().parse(pattern)`.
 ///
@@ -14,7 +14,7 @@ pub fn parse(pattern: &str) -> Result<hir::Hir, Error> {
     Parser::new().parse(pattern)
 }
 
-/// A builder for a regular expression parser.
+/// Строитель для обработчика регулярных выражений.
 ///
 /// This builder permits modifying configuration options for the parser.
 ///
@@ -213,7 +213,7 @@ impl ParserBuilder {
     }
 }
 
-/// A convenience parser for regular expressions.
+/// Удобный обработчик для регулярных выражений.
 ///
 /// This parser takes as input a regular expression pattern string (the
 /// "concrete syntax") and returns a high-level intermediate representation

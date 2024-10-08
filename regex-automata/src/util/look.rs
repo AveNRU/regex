@@ -1266,7 +1266,7 @@ impl Default for LookMatcher {
     }
 }
 
-/// An error that occurs when the Unicode-aware `\w` class is unavailable.
+/// Ошибка, возникающая, когда `\w` класс, поддерживающий Unicode, недоступен.
 ///
 /// This error can occur when the data tables necessary for the Unicode aware
 /// Perl character class `\w` are unavailable. The `\w` class is used to

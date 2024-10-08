@@ -4,7 +4,7 @@ use crate::{error::Error, utf8};
 
 mod parse;
 
-/// Экранирует все метасимволы регулярных выражений в `pattern`.
+/// Экранирует все метазнаки регулярных выражений в `pattern`.
 ///
 /// The string returned may be safely used as a literal in a regular
 /// expression.
@@ -20,7 +20,7 @@ pub fn escape(pattern: &str) -> String {
     buf
 }
 
-/// Returns true if the given character has significance in a regex.
+/// Возвращает true, если указанный знак имеет значение в регулярном выражении.
 ///
 /// Generally speaking, these are the only characters which _must_ be escaped
 /// in order to match their literal meaning. For example, to match a literal
@@ -50,8 +50,8 @@ fn is_meta_character(c: char) -> bool {
     }
 }
 
-/// Returns true if the given character can be escaped in a regex.
-///
+/// Возвращает значение true, если заданный знак можно экранировать в регулярном
+/// выражении.  
 /// This returns true in all cases that `is_meta_character` returns true, but
 /// also returns true in some cases where `is_meta_character` returns false.
 /// For example, `%` is not a meta character, but it is escapeable. That is,

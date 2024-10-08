@@ -1,41 +1,41 @@
 /*!
-This crate provides a robust regular expression parser.
+Это дополнение предоставляет надежный оценщик регулярных выражений.
 
-This crate defines two primary types:
+Это дополнение определяет два основных вида:
 
-* [`Ast`](ast::Ast) is the abstract syntax of a regular expression.
-  An abstract syntax corresponds to a *structured representation* of the
-  concrete syntax of a regular expression, where the concrete syntax is the
-  pattern string itself (e.g., `foo(bar)+`). Given some abstract syntax, it
-  can be converted back to the original concrete syntax (modulo some details,
-  like whitespace). To a first approximation, the abstract syntax is complex
-  and difficult to analyze.
-* [`Hir`](hir::Hir) is the high-level intermediate representation
-  ("HIR" or "high-level IR" for short) of regular expression. It corresponds to
-  an intermediate state of a regular expression that sits between the abstract
-  syntax and the low level compiled opcodes that are eventually responsible for
-  executing a regular expression search. Given some high-level IR, it is not
-  possible to produce the original concrete syntax (although it is possible to
-  produce an equivalent concrete syntax, but it will likely scarcely resemble
-  the original pattern). To a first approximation, the high-level IR is simple
-  and easy to analyze.
+* [`Ast`](ast::Ast) абстрактные правила написания регулярного выражения. Абстрактные правила написания 
+ соответствует структурированному представлению конкретного правил написания  регулярного выражения,
+  где определенные правила написания — это сама строка образца (например, `foo(bar)+`). 
+   При наличии некоторого абстрактного правил написания  его можно преобразовать обратно в исходный 
+   определенные правила написания (по разделу некоторых подробностей, таких как пробелы). 
+   В первом приближении абстрактные правила написания сложен и труден для анализа.
+* [`Hir`](hir::Hir) является промежуточным представлением высокого уровня 
+(сокращенно «HIR» или «IR высокого уровня») регулярного выражения. 
+Оно соответствует промежуточному состоянию регулярного выражения, 
+которое находится между абстрактными правилами написания  и собранными 
+кодами операций низкого уровня, которые в конечном итоге отвечают за 
+выполнение поиска регулярного выражения. При наличии некоторого IR 
+высокого уровня невозможно создать исходные определенные правила написания 
+(хотя возможно создать сопоставимые определенные правила написания , но он, 
+скорее всего, вряд ли будет напоминать исходный образец). 
+В первом приближении IR высокого уровня прост и легко поддается анализу.
 
-These two types come with conversion routines:
+Эти два вида поставляются с процедурами преобразования:
 
-* An [`ast::parse::Parser`] converts concrete syntax (a `&str`) to an
+* [`ast::parse::Parser`] преобразует определенные правила написания (`&str`) в
 [`Ast`](ast::Ast).
-* A [`hir::translate::Translator`] converts an [`Ast`](ast::Ast) to a
+* A [`hir::translate::Translator`] преобразует [`Ast`](ast::Ast) в
 [`Hir`](hir::Hir).
 
-As a convenience, the above two conversion routines are combined into one via
-the top-level [`Parser`] type. This `Parser` will first convert your pattern to
-an `Ast` and then convert the `Ast` to an `Hir`. It's also exposed as top-level
-[`parse`] free function.
+Для удобства, вышеприведенные две процедуры преобразования объединены в одну 
+через вид верхнего уровня [`Parser`] type. Этот `Parser` сначала преобразует ваш образец в `Ast`, 
+а затем преобразует `Ast` в `Hir`. Это также представлено как
+[`parse`] свободная функция верхнего уровня.
 
 
-# Example
+# Пример
 
-This example shows how to parse a pattern string into its HIR:
+В этом примере показано, как преобразовать строку образца в ее HIR:
 
 ```
 use regex_syntax::{hir::Hir, parse};
@@ -49,119 +49,114 @@ assert_eq!(hir, Hir::alternation(vec![
 ```
 
 
-# Concrete syntax supported
+# Поддерживаются определенные правила написания 
 
-The concrete syntax is documented as part of the public API of the
+Определенные правила написания представлен как часть публичного API
 [`regex` crate](https://docs.rs/regex/%2A/regex/#syntax).
 
 
-# Input safety
+# Безопасность на входе
 
-A key feature of this library is that it is safe to use with end user facing
-input. This plays a significant role in the internal implementation. In
-particular:
+Ключевой особенностью этой библиотеки является то, что ее можно безопасно использовать 
+с конечным пользователем, который обращается к вводу. Это играет важную роль во 
+внутреннем исполнении. В частности:
 
-1. Parsers provide a `nest_limit` option that permits callers to control how
-   deeply nested a regular expression is allowed to be. This makes it possible
-   to do case analysis over an `Ast` or an `Hir` using recursion without
-   worrying about stack overflow.
-2. Since relying on a particular stack size is brittle, this crate goes to
-   great lengths to ensure that all interactions with both the `Ast` and the
-   `Hir` do not use recursion. Namely, they use constant stack space and heap
-   space proportional to the size of the original pattern string (in bytes).
-   This includes the type's corresponding destructors. (One exception to this
-   is literal extraction, but this will eventually get fixed.)
-
-
-# Error reporting
-
-The `Display` implementations on all `Error` types exposed in this library
-provide nice human readable errors that are suitable for showing to end users
-in a monospace font.
+1. Обработчики предоставляют `nest_limit` возможность, которая позволяет вызывающим отслеживать, 
+насколько глубоко вложенным может быть регулярное выражение. Это позволяет проводить 
+анализ случаев с использованием рекурсии `Ast` или `Hir` без беспокойства о переполнении обоймы.
+2. Поскольку полагаться на определенный размер обоймы ненадежно, это дополнение делает 
+все возможное, чтобы обеспечивать, что все взаимодействия как с , `Ast` так и с
+   `Hir` не используют рекурсию. А именно, они используют постоянное пространство 
+   обоймы и пространство кучи, сопоставимое размеру исходной строки образца 
+   (в байтах). Это включает в себя соответствующие уничтожители вида. 
+   (Единственным исключением является буквальное извлечение, но это в конечном 
+   итоге будет исправлено.)
 
 
-# Literal extraction
+# Сообщение об ошибке
 
-This crate provides limited support for [literal extraction from `Hir`
-values](hir::literal). Be warned that literal extraction uses recursion, and
-therefore, stack size proportional to the size of the `Hir`.
+Использование `Display` для всех видов `Error` , представленных в этой библиотеке, 
+обеспечивает удобные для восприятия человеком ошибки, которые можно 
+отображать конечным пользователям в моноширинном шрифте.
 
-The purpose of literal extraction is to speed up searches. That is, if you
-know a regular expression must match a prefix or suffix literal, then it is
-often quicker to search for instances of that literal, and then confirm or deny
-the match using the full regular expression engine. These optimizations are
-done automatically in the `regex` crate.
+# Буквальное извлечение
+
+Это дополнение обеспечивает ограниченную поддержку для [буквального извлечения из `Hir` значений](hir::literal). 
+Имейте в виду, что буквальное извлечение использует рекурсию, и, 
+следовательно, размер обоймы сопоставим размеру `Hir`.
+
+Целью извлечения знаков является ускорение поиска. То есть, если вы знаете, 
+что регулярное выражение должно соответствовать префиксному или суффиксному знаку, 
+то часто быстрее выполнить поиск образцов этого знака, а затем подтвердить или 
+опровергнуть совпадение, используя полный рычаг регулярных выражений. 
+Эти оптимизации выполняются самостоятельно в `regex` дополнении.
 
 
-# Crate features
+# Характеристики дополнения
 
-An important feature provided by this crate is its Unicode support. This
-includes things like case folding, boolean properties, general categories,
-scripts and Unicode-aware support for the Perl classes `\w`, `\s` and `\d`.
-However, a downside of this support is that it requires bundling several
-Unicode data tables that are substantial in size.
+Важной возможностью, предоставляемой этим дополнением, является поддержка Unicode. 
+Сюда входят такие вещи, как сворачивание строчных и заглавных букв, логические свойства, общие 
+разделы, скрипты и поддержка Unicode для классов Perl `\w`, `\s` и `\d`.
+Однако недостатком этой поддержки является то, что она требует объединения 
+нескольких таблиц данных Unicode, которые имеют существенный размер.
 
-A fair number of use cases do not require full Unicode support. For this
-reason, this crate exposes a number of features to control which Unicode
-data is available.
+Достаточное количество исходов использования не требует полной поддержки Unicode. 
+По этой причине это дополнение предоставляет ряд функций для управления доступностью данных Unicode.
 
-If a regular expression attempts to use a Unicode feature that is not available
-because the corresponding crate feature was disabled, then translating that
-regular expression to an `Hir` will return an error. (It is still possible
-construct an `Ast` for such a regular expression, since Unicode data is not
-used until translation to an `Hir`.) Stated differently, enabling or disabling
-any of the features below can only add or subtract from the total set of valid
-regular expressions. Enabling or disabling a feature will never modify the
-match semantics of a regular expression.
+Если регулярное выражение пытается использовать функцию Unicode, которая недоступна из-за того, 
+что соответствующая функция дополнения была отключена, то перевод этого регулярного выражения 
+в `Hir` вернет ошибку. (Все еще возможно построить `Ast` для такого регулярного выражения, 
+поскольку данные Unicode не используются до перевода в `Hir`.) Другими словами, включение 
+или отключение любой из функций ниже может только добавить или вычесть из общего набора 
+допустимых регулярных выражений. Включение или отключение функции никогда не изменит 
+смысл соответствия регулярного выражения.
 
-The following features are available:
+Доступны следующие функции:
 
 * **std** -
-  Enables support for the standard library. This feature is enabled by default.
-  When disabled, only `core` and `alloc` are used. Otherwise, enabling `std`
-  generally just enables `std::error::Error` trait impls for the various error
-  types.
+  включает поддержку встроенной библиотеки. Эта функция включена по умолчанию. 
+  Если отключено, используются только `core` и `alloc`.  В противном случае включение `std` обычно 
+  просто включает использование сущности `std::error::Error` для различных видов ошибок .
 * **unicode** -
-  Enables all Unicode features. This feature is enabled by default, and will
-  always cover all Unicode features, even if more are added in the future.
+ Включает все функции Unicode. Эта функция включена по умолчанию и всегда 
+ будет охватывать все функции Unicode, даже если в будущем будут добавлены новые.
 * **unicode-age** -
-  Provide the data for the
-  [Unicode `Age` property](https://www.unicode.org/reports/tr44/tr44-24.html#Character_Age).
-  This makes it possible to use classes like `\p{Age:6.0}` to refer to all
-  codepoints first introduced in Unicode 6.0
+  Предоставьте данные для 
+  [свойства Unicode `Age`](https://www.unicode.org/reports/tr44/tr44-24.html#Character_Age).
+  Это позволяет использовать классы, например, `\p{Age:6.0}`
+  для ссылки на все знаки, впервые представленные в Unicode 6.0
 * **unicode-bool** -
-  Provide the data for numerous Unicode boolean properties. The full list
-  is not included here, but contains properties like `Alphabetic`, `Emoji`,
-  `Lowercase`, `Math`, `Uppercase` and `White_Space`.
+  предоставляет данные для многочисленных разумных свойств Unicode. 
+  Полный список здесь не включен, но содержит такие свойства, как `Alphabetic`, `Emoji`,
+  `Lowercase`, `Math`, `Uppercase` и `White_Space`.
 * **unicode-case** -
-  Provide the data for case insensitive matching using
-  [Unicode's "simple loose matches" specification](https://www.unicode.org/reports/tr18/#Simple_Loose_Matches).
+  предоставление данных для сопоставления без учета строчных и заглавных букв с использованием 
+  [перечня «простых свободных сопоставлений» Unicode](https://www.unicode.org/reports/tr18/#Simple_Loose_Matches).
 * **unicode-gencat** -
-  Provide the data for
-  [Unicode general categories](https://www.unicode.org/reports/tr44/tr44-24.html#General_Category_Values).
-  This includes, but is not limited to, `Decimal_Number`, `Letter`,
+  Предоставьте данные для 
+  [общих разделов Unicode](https://www.unicode.org/reports/tr44/tr44-24.html#General_Category_Values).
+  Это включает, но не ограничивается, `Decimal_Number`, `Letter`,
   `Math_Symbol`, `Number` and `Punctuation`.
 * **unicode-perl** -
-  Provide the data for supporting the Unicode-aware Perl character classes,
-  corresponding to `\w`, `\s` and `\d`. This is also necessary for using
-  Unicode-aware word boundary assertions. Note that if this feature is
-  disabled, the `\s` and `\d` character classes are still available if the
-  `unicode-bool` and `unicode-gencat` features are enabled, respectively.
+  Предоставьте данные для поддержки классов знаков Perl, поддерживающих Unicode, 
+  соответствующих `\w`, `\s` и `\d`.  Это также необходимо для использования определений границ
+  слов, поддерживающих Unicode. Обратите внимание, что если эта функция отключена, классы знаков 
+  `\s` и `\d` по-прежнему доступны, если включены функции `unicode-bool` и `unicode-gencat` соответственно.
 * **unicode-script** -
-  Provide the data for
-  [Unicode scripts and script extensions](https://www.unicode.org/reports/tr24/).
-  This includes, but is not limited to, `Arabic`, `Cyrillic`, `Hebrew`,
-  `Latin` and `Thai`.
+  Предоставьте данные для
+  [скриптов Unicode и расширений скриптов](https://www.unicode.org/reports/tr24/).
+  Это включает, но не ограничивается, `Arabic`, `Cyrillic`, `Hebrew`,
+  `Latin` и `Thai`.
 * **unicode-segment** -
-  Provide the data necessary to provide the properties used to implement the
-  [Unicode text segmentation algorithms](https://www.unicode.org/reports/tr29/).
-  This enables using classes like `\p{gcb=Extend}`, `\p{wb=Katakana}` and
+  Предоставьте данные, необходимые для предоставления свойств, используемых для использования
+  [алгоритмов сегментации писания Unicode](https://www.unicode.org/reports/tr29/).
+  Это позволяет использовать такие классы, как `\p{gcb=Extend}`, `\p{wb=Katakana}` и
   `\p{sb=ATerm}`.
-* **arbitrary** -
-  Enabling this feature introduces a public dependency on the
+* **произвольный** -
+  Включение этой функции вводит общедоступную зависимость от
   [`arbitrary`](https://crates.io/crates/arbitrary)
-  crate. Namely, it implements the `Arbitrary` trait from that crate for the
-  [`Ast`](crate::ast::Ast) type. This feature is disabled by default.
+  дополнения. А именно, она использует `Arbitrary` черту из этого дополнения для
+  [`Ast`](crate::ast::Ast) вида. Эта функция отключена по умолчанию.
 */
 
 #![no_std]
@@ -194,7 +189,7 @@ mod unicode;
 mod unicode_tables;
 pub mod utf8;
 
-/// Экранирует все метасимволы регулярных выражений в `text`.
+/// Экранирует все метазнаки регулярных выражений в `text`.
 ///
 /// The string returned may be safely used as a literal in a regular
 /// expression.
@@ -204,7 +199,7 @@ pub fn escape(text: &str) -> String {
     quoted
 }
 
-/// Escapes all meta characters in `text` and writes the result into `buf`.
+/// Экранирует все метазнаки `text` и записывает итог в `buf`.
 ///
 /// This will append escape characters into the given buffer. The characters
 /// that are appended are safe to use as a literal in a regular expression.
@@ -218,7 +213,7 @@ pub fn escape_into(text: &str, buf: &mut String) {
     }
 }
 
-/// Returns true if the given character has significance in a regex.
+/// Возвращает true, если указанный знак имеет значение в регулярном выражении.
 ///
 /// Generally speaking, these are the only characters which _must_ be escaped
 /// in order to match their literal meaning. For example, to match a literal
@@ -265,7 +260,7 @@ pub fn is_meta_character(c: char) -> bool {
     }
 }
 
-/// Returns true if the given character can be escaped in a regex.
+/// Возвращает значение true, если заданный знак можно экранировать в регулярном выражении.
 ///
 /// This returns true in all cases that `is_meta_character` returns true, but
 /// also returns true in some cases where `is_meta_character` returns false.
@@ -330,8 +325,8 @@ pub fn is_escapeable_character(c: char) -> bool {
     }
 }
 
-/// Returns true if and only if the given character is a Unicode word
-/// character.
+/// Возвращает значение true тогда и только тогда, когда заданный знак является знаком слова Unicode.
+/// 
 ///
 /// A Unicode word character is defined by
 /// [UTS#18 Annex C](https://unicode.org/reports/tr18/#Compatibility_Properties).
@@ -349,8 +344,8 @@ pub fn is_word_character(c: char) -> bool {
     try_is_word_character(c).expect("unicode-perl feature must be enabled")
 }
 
-/// Returns true if and only if the given character is a Unicode word
-/// character.
+/// Возвращает значение true тогда и только тогда, когда заданный знак является знаком слова Unicode.
+/// 
 ///
 /// A Unicode word character is defined by
 /// [UTS#18 Annex C](https://unicode.org/reports/tr18/#Compatibility_Properties).
@@ -369,7 +364,7 @@ pub fn try_is_word_character(
     unicode::is_word_character(c)
 }
 
-/// Returns true if and only if the given character is an ASCII word character.
+/// Возвращает значение true тогда и только тогда, когда заданный знак является знаком слова ASCII.
 ///
 /// An ASCII word character is defined by the following character class:
 /// `[_0-9a-zA-Z]`.
